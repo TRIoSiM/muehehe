@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Özel Davet - Mobil</title>
+    <title>Goose Goose Duck Daveti - Mobil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS: Görünüm ve Düzen */
         body {
             display: flex;
             flex-direction: column;
@@ -13,46 +13,67 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #36393f;
-            color: white;
-            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e); /* Modern gradient */
+            color: #e0e0e0;
+            font-family: 'Poppins', sans-serif;
             text-align: center;
+            overflow: hidden;
         }
 
         h1 {
-            font-size: 2.2em;
+            font-size: 2.5em; /* Mobil için biraz daha küçük */
             margin-bottom: 50px;
+            color: #90ee90;
+            text-shadow: 0 0 10px rgba(144, 238, 144, 0.6);
+            animation: fadeIn 1s ease-out;
         }
 
         .buttons-container {
             display: flex;
-            gap: 20px; /* Butonlar arası küçük boşluk */
+            gap: 20px;
             justify-content: center;
             align-items: center;
             width: 100%;
-            touch-action: manipulation; /* Mobil performansını artırır */
+            touch-action: manipulation;
+            flex-wrap: wrap; /* Butonların mobil görünümde alt alta geçmesine izin verir */
         }
 
         .button {
-            padding: 20px 40px; /* Mobil dokunma için büyük butonlar */
-            font-size: 1.4em;
+            padding: 22px 45px; /* Mobil için büyük dokunma alanı */
+            font-size: 1.5em;
             cursor: pointer;
             border: none;
-            border-radius: 10px;
-            transition: background-color 0.3s;
+            border-radius: 15px; /* Daha yumuşak köşeler */
+            font-weight: 700;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
         }
 
         #yes-btn {
-            background-color: #4CAF50; /* Yeşil ve büyük */
+            background-color: #4CAF50;
             color: white;
-            padding: 25px 50px; /* EVET butonunu daha da büyük yap */
+            animation: growAndPulse 3s infinite alternate; /* Sürekli büyüyüp küçülme ve parlama */
         }
 
         #no-btn {
-            background-color: #f44336; /* Kırmızı ve küçük */
+            background-color: #f44336;
             color: white;
-            padding: 10px 20px; /* HAYIR butonunu kasıtlı olarak küçük yap */
-            font-size: 1em;
+            padding: 12px 25px; /* HAYIR butonunu kasıtlı olarak küçük yap */
+            font-size: 1.1em;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            /* Mobil için Hayır butonunu biraz daha izole edebiliriz */
+            margin-top: 30px; 
+        }
+
+        /* Animasyonlar */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes growAndPulse {
+            0% { transform: scale(1); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
+            50% { transform: scale(1.15); box-shadow: 0 0 30px rgba(76, 175, 80, 0.8); } /* Büyürken parlama */
+            100% { transform: scale(1); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
         }
     </style>
 </head>
@@ -66,28 +87,26 @@
     </div>
 
     <script>
-        // JavaScript: Dokunmatik Alan Hilesi
         const yesButton = document.getElementById('yes-btn');
         const container = document.getElementById('container');
+        const noButton = document.getElementById('no-btn'); // Hayır butonunu da alalım
 
-        // Container üzerine dokunma olayı ekle (touchstart)
         container.addEventListener('touchstart', function(event) {
-            // Eğer birden fazla parmakla dokunulmadıysa devam et
             if (event.touches.length === 1) {
-                
                 const touchX = event.touches[0].clientX;
                 const touchY = event.touches[0].clientY;
                 const yesRect = yesButton.getBoundingClientRect();
+                const noRect = noButton.getBoundingClientRect(); // Hayır butonunun da konumunu alalım
                 
-                // HAYALİ GENİŞLETİLMİŞ EVET ALANI: EVET butonunun her yönde 80 piksel ötesi
+                // HAYALİ GENİŞLETİLMİŞ EVET ALANI: EVET butonunun etrafındaki geniş bir tampon bölge
                 const extendedArea = {
-                    left: yesRect.left - 80,
-                    right: yesRect.right + 80,
-                    top: yesRect.top - 80,
-                    bottom: yesRect.bottom + 80
+                    left: yesRect.left - 100, // Daha geniş bir alan
+                    right: yesRect.right + 100,
+                    top: yesRect.top - 100,
+                    bottom: yesRect.bottom + 100
                 };
                 
-                // Kullanıcının dokunduğu yer, genişletilmiş EVET alanının içindeyse
+                // Kullanıcının dokunduğu yer, bu genişletilmiş EVET alanının içindeyse
                 if (
                     touchX >= extendedArea.left &&
                     touchX <= extendedArea.right &&
@@ -97,18 +116,26 @@
                     // Orijinal tıklamayı iptal et ve EVET cevabını tetikle
                     event.preventDefault(); 
                     handleAnswer('Evet');
+                } 
+                // Eğer dokunulan nokta GENİŞLETİLMİŞ EVET alanında değilse VE tam olarak HAYIR butonunun içindeyse
+                else if (
+                    touchX >= noRect.left &&
+                    touchX <= noRect.right &&
+                    touchY >= noRect.top &&
+                    touchY <= noRect.bottom
+                ) {
+                    // Sadece bu durumda HAYIR cevabını tetikle (Bu çok zor olacak!)
+                     event.preventDefault(); 
+                     handleAnswer('Hayır');
                 }
             }
         });
         
-        // Bu fonksiyona sadece EVET butonu dokunmatik hile ile ulaşacak. 
-        // HAYIR butonu için de bir onclick eklenmiş olsa bile, 
-        // çoğu dokunuş hileli alana takılacaktır.
         function handleAnswer(answer) {
             if (answer === 'Evet') {
                 alert("Evet! Harika bir karar. Hemen Duck'ları avlamaya gidiyoruz! 🦆");
             } else {
-                 alert("Üzgünüm, telefonda dokunma hassasiyeti çok düşük. Lütfen biraz daha merkeze doğru (tercihen 'Evet'e) dokunmayı deneyiniz. 😉");
+                 alert("Üzgünüm, telefonda dokunma hassasiyeti çok düşük. Lütfen 'Evet'e doğru biraz daha merkeze dokunmayı dener misin? 😉");
             }
         }
     </script>
