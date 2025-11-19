@@ -2,8 +2,8 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Goose Goose Duck Daveti - Mobil</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Goose Goose Duck Daveti</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -13,126 +13,107 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #1a1a2e, #16213e); 
-            color: #e0e0e0;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
             font-family: 'Poppins', sans-serif;
-            text-align: center;
             overflow: hidden;
         }
 
         h1 {
-            font-size: 2.5em;
-            margin-bottom: 50px;
-            color: #90ee90;
-            text-shadow: 0 0 10px rgba(144, 238, 144, 0.6);
-            animation: fadeIn 1s ease-out;
+            font-size: 2em;
+            margin-bottom: 40px;
+            text-align: center;
+            padding: 0 20px;
+            line-height: 1.4;
+            animation: fadeIn 1.5s ease;
         }
 
         .buttons-container {
             display: flex;
-            gap: 20px;
-            justify-content: center;
+            flex-direction: column; /* Mobilde alt alta daha iyi durur */
+            gap: 30px;
             align-items: center;
             width: 100%;
-            touch-action: manipulation;
-            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
         }
 
         .button {
-            padding: 22px 45px;
-            font-size: 1.5em;
-            cursor: pointer;
             border: none;
-            border-radius: 15px;
-            font-weight: 700;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-            transition: all 0.3s ease;
+            border-radius: 20px;
+            font-weight: bold;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Elastik efekt */
         }
 
         #yes-btn {
             background-color: #4CAF50;
             color: white;
-            animation: growAndPulse 3s infinite alternate; /* Sürekli büyüyüp küçülme ve parlama */
+            font-size: 1.8em;
+            padding: 25px 80px;
+            /* Kalp atışı animasyonu */
+            animation: heartbeat 1.5s infinite;
         }
 
         #no-btn {
             background-color: #f44336;
             color: white;
-            padding: 12px 25px; 
-            font-size: 1.1em;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-            margin-top: 30px; 
+            font-size: 1em;
+            padding: 15px 30px;
+            opacity: 0.9;
         }
 
-        /* Animasyon Tanımları */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes heartbeat {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+            50% { transform: scale(1.1); box-shadow: 0 0 20px 10px rgba(76, 175, 80, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
         }
-        @keyframes growAndPulse {
-            0% { transform: scale(1); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
-            50% { transform: scale(1.15); box-shadow: 0 0 30px rgba(76, 175, 80, 0.8); } /* Büyürken parlama */
-            100% { transform: scale(1); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-    <h1>Goose Goose Duck oynayalım mı?</h1>
+    <h1>Goose Goose Duck<br>oynayalım mı?</h1>
 
     <div class="buttons-container" id="container">
-        <button id="yes-btn" class="button" onclick="handleAnswer('Evet')">Evet</button>
-        <button id="no-btn" class="button" onclick="handleAnswer('Hayır')">Hayır</button>
+        <button id="yes-btn" class="button" onclick="finish('Evet')">EVET</button>
+        <button id="no-btn" class="button">Hayır</button>
     </div>
 
     <script>
         const yesButton = document.getElementById('yes-btn');
-        const container = document.getElementById('container');
         const noButton = document.getElementById('no-btn');
+        const container = document.querySelector('body'); // Tüm ekrana yaydık
 
-        container.addEventListener('touchstart', function(event) {
-            if (event.touches.length === 1) {
-                const touchX = event.touches[0].clientX;
-                const touchY = event.touches[0].clientY;
-                const yesRect = yesButton.getBoundingClientRect();
-                const noRect = noButton.getBoundingClientRect();
+        // DOKUNMATİK HİLESİ (GÜNCELLENMİŞ VE GÜÇLENDİRİLMİŞ)
+        container.addEventListener('touchstart', function(e) {
+            if (e.target === noButton) {
+                // Eğer dokunulan yer Hayır butonu ise...
                 
-                // HAYALİ GENİŞLETİLMİŞ EVET ALANI
-                const extendedArea = {
-                    left: yesRect.left - 100, 
-                    right: yesRect.right + 100,
-                    top: yesRect.top - 100,
-                    bottom: yesRect.bottom + 100
-                };
+                // 1. Olayı durdur (Normal tıklamayı engelle)
+                e.preventDefault();
+                e.stopPropagation();
+
+                // 2. Kullanıcıya görsel bir yanılsama ver (Hayır'a basmış gibi hissetsin ama...)
+                noButton.style.transform = "scale(0.9)";
                 
-                // Dokunulan yer GENİŞLETİLMİŞ EVET alanının içindeyse (Hile!)
-                if (
-                    touchX >= extendedArea.left &&
-                    touchX <= extendedArea.right &&
-                    touchY >= extendedArea.top &&
-                    touchY <= extendedArea.bottom
-                ) {
-                    event.preventDefault(); 
-                    handleAnswer('Evet');
-                } 
-                // Aksi takdirde, dokunulan yer tam olarak HAYIR butonunun içindeyse (Çok zor!)
-                else if (
-                    touchX >= noRect.left &&
-                    touchX <= noRect.right &&
-                    touchY >= noRect.top &&
-                    touchY <= noRect.bottom
-                ) {
-                     event.preventDefault(); 
-                     handleAnswer('Hayır');
-                }
+                // 3. Yarım saniye sonra aslında EVET demiş gibi işlem yap
+                setTimeout(() => {
+                    noButton.style.transform = "scale(1)";
+                    finish('Evet'); // Sürpriz! Cevap Evet olarak gider.
+                }, 150);
             }
-        });
-        
-        function handleAnswer(answer) {
-            if (answer === 'Evet') {
-                alert("Evet! Harika bir karar. Hemen Duck'ları avlamaya gidiyoruz! 🦆");
-            } else {
-                 alert("Üzgünüm, telefonda dokunma hassasiyeti çok düşük. Lütfen 'Evet'e doğru biraz daha merkeze dokunmayı dener misin? 😉");
+        }, { passive: false }); // <-- BU KISIM ÇOK ÖNEMLİ! (Modern tarayıcılar için)
+
+        function finish(answer) {
+            if(answer === 'Evet') {
+                // Konfeti veya kutlama efekti yerine basit bir alert
+                alert("Harika seçim! Oyuna giriyorum. 🦆");
             }
         }
     </script>
