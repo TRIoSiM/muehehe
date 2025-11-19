@@ -6,73 +6,136 @@
     <title>Goose Goose Duck Daveti</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Taşmaları engelle */
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white;
-            font-family: 'Poppins', sans-serif;
-            overflow: hidden;
         }
 
+        /* --- ANA BAŞLIK --- */
+        /* Başlangıçta görünür, sonra Evet butonu üstüne çıkacağı için altta kalır */
         h1 {
-            font-size: 2em;
-            margin-bottom: 40px;
-            text-align: center;
-            padding: 0 20px;
-            line-height: 1.4;
-            animation: fadeIn 1.5s ease;
-        }
-
-        .buttons-container {
-            display: flex;
-            flex-direction: column; /* Mobilde alt alta daha iyi durur */
-            gap: 30px;
-            align-items: center;
+            position: absolute;
+            top: 15%;
             width: 100%;
-            position: relative;
-            z-index: 2;
+            text-align: center;
+            color: #e0e0e0;
+            font-size: 2em;
+            z-index: 1;
+            transition: opacity 2s;
         }
 
-        .button {
-            border: none;
-            border-radius: 20px;
+        /* --- BUTONLARIN ORTAK STİLİ --- */
+        .btn {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             font-weight: bold;
-            font-family: 'Poppins', sans-serif;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Elastik efekt */
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            /* Başlangıçta (açılışta) ikisi de ortada ve eşit boyda */
+            width: 200px;
+            height: 60px;
+            border-radius: 15px;
+            font-size: 1.2em;
+            left: 50%;
+            transform: translateX(-50%); /* Tam ortalamak için */
         }
 
+        /* --- EVET BUTONU --- */
         #yes-btn {
             background-color: #4CAF50;
             color: white;
-            font-size: 1.8em;
-            padding: 25px 80px;
-            /* Kalp atışı animasyonu */
-            animation: heartbeat 1.5s infinite;
+            top: 45%; /* Ekranın ortasına yakın */
+            z-index: 10;
+            
+            /* ANİMASYON AYARLARI */
+            /* 1 saniye bekle, sonra 5 saniye boyunca yavaşça büyüsün */
+            animation: expandToFullScreen 5s ease-in-out forwards 1s; 
         }
 
+        /* --- HAYIR BUTONU --- */
         #no-btn {
             background-color: #f44336;
             color: white;
-            font-size: 1em;
-            padding: 15px 30px;
-            opacity: 0.9;
+            top: 55%; /* Evet butonunun hemen altında */
+            z-index: 5;
+
+            /* ANİMASYON AYARLARI */
+            /* 1 saniye bekle, sonra 5 saniye boyunca küçülüp yok olsun */
+            animation: shrinkToNothing 5s ease-in-out forwards 1s;
         }
 
-        @keyframes heartbeat {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
-            50% { transform: scale(1.1); box-shadow: 0 0 20px 10px rgba(76, 175, 80, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+        /* --- ANİMASYONLAR (KEYFRAMES) --- */
+
+        /* Evet Butonu: Normalden -> Tam Ekrana */
+        @keyframes expandToFullScreen {
+            0% {
+                width: 200px;
+                height: 60px;
+                top: 45%;
+                border-radius: 15px;
+                font-size: 1.2em;
+            }
+            100% {
+                width: 100%;       /* Tam Genişlik */
+                height: 100%;      /* Tam Yükseklik */
+                top: 0;            /* En tepeye yapış */
+                border-radius: 0;  /* Köşeler düzleşsin */
+                font-size: 3em;    /* Yazı kocaman olsun */
+                transform: translateX(-50%); /* X ekseni ortalaması bozulmasın */
+            }
         }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        /* Hayır Butonu: Normalden -> Yok Olmaya */
+        @keyframes shrinkToNothing {
+            0% {
+                width: 200px;
+                height: 60px;
+                opacity: 1;
+                font-size: 1.2em;
+            }
+            100% {
+                width: 0px;
+                height: 0px;
+                opacity: 0;       /* Görünmez ol */
+                font-size: 0;     /* Yazı yok ol */
+                padding: 0;
+            }
+        }
+
+        /* --- OVERLAY (Yeşil Ekran Kutlaması) --- */
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #1b5e20;
+            opacity: 0;
+            z-index: 100;
+            pointer-events: none;
+            transition: opacity 2s ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 2em;
+            font-weight: bold;
+            visibility: hidden;
+        }
+        #overlay.active {
+            opacity: 1;
+            visibility: visible;
         }
     </style>
 </head>
@@ -80,41 +143,27 @@
 
     <h1>Goose Goose Duck<br>oynayalım mı?</h1>
 
-    <div class="buttons-container" id="container">
-        <button id="yes-btn" class="button" onclick="finish('Evet')">EVET</button>
-        <button id="no-btn" class="button">Hayır</button>
+    <button id="yes-btn" class="btn" onclick="finish()">Evet</button>
+    <button id="no-btn" class="btn">Hayır</button>
+
+    <div id="overlay">
+        Hemen Geliyorum! 🦆
     </div>
 
     <script>
-        const yesButton = document.getElementById('yes-btn');
         const noButton = document.getElementById('no-btn');
-        const container = document.querySelector('body'); // Tüm ekrana yaydık
-
-        // DOKUNMATİK HİLESİ (GÜNCELLENMİŞ VE GÜÇLENDİRİLMİŞ)
-        container.addEventListener('touchstart', function(e) {
-            if (e.target === noButton) {
-                // Eğer dokunulan yer Hayır butonu ise...
-                
-                // 1. Olayı durdur (Normal tıklamayı engelle)
-                e.preventDefault();
-                e.stopPropagation();
-
-                // 2. Kullanıcıya görsel bir yanılsama ver (Hayır'a basmış gibi hissetsin ama...)
-                noButton.style.transform = "scale(0.9)";
-                
-                // 3. Yarım saniye sonra aslında EVET demiş gibi işlem yap
-                setTimeout(() => {
-                    noButton.style.transform = "scale(1)";
-                    finish('Evet'); // Sürpriz! Cevap Evet olarak gider.
-                }, 150);
-            }
-        }, { passive: false }); // <-- BU KISIM ÇOK ÖNEMLİ! (Modern tarayıcılar için)
-
-        function finish(answer) {
-            if(answer === 'Evet') {
-                // Konfeti veya kutlama efekti yerine basit bir alert
-                alert("Harika seçim! Oyuna giriyorum. 🦆");
-            }
+        
+        // Hayır butonuna basmaya çalışırsa (henüz yok olmadan)
+        noButton.addEventListener('click', function(e) {
+             alert("Hayır butonu arızalı galiba... 'Evet' olarak algıladım! 😉");
+             finish();
+        });
+        
+        function finish() {
+            document.getElementById('overlay').classList.add('active');
+            setTimeout(() => {
+                alert("Süper! Oyunu aç, geliyorum. 🦆🔪");
+            }, 2200);
         }
     </script>
 </body>

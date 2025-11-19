@@ -17,7 +17,8 @@
             color: #e0e0e0;
             font-family: 'Poppins', sans-serif;
             text-align: center;
-            overflow: hidden; /* Scroll çubuklarını gizle */
+            overflow: hidden;
+            position: relative; /* Overlay için gereklidir */
         }
 
         h1 {
@@ -26,17 +27,17 @@
             color: #90ee90;
             text-shadow: 0 0 20px rgba(144, 238, 144, 0.5);
             animation: dropIn 1s ease-out;
+            z-index: 1; /* Diğer elementlerin önünde kalması için */
         }
 
         .buttons-container {
             position: relative;
-            width: 800px; /* Sabit genişlik vererek alanı netleştirdik */
+            width: 800px; 
             height: 500px;
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Sınırları görmek istersen aşağıdaki yorumu kaldır: */
-            /* border: 1px solid rgba(255,255,255,0.1); */
+            z-index: 1;
         }
 
         .button {
@@ -44,7 +45,7 @@
             font-size: 1.5em;
             cursor: pointer;
             border: none;
-            border-radius: 50px; /* Tam oval butonlar */
+            border-radius: 50px;
             font-weight: 700;
             transition: transform 0.2s, box-shadow 0.2s;
         }
@@ -65,11 +66,38 @@
             color: white;
             box-shadow: 0 0 15px #f44336;
             position: absolute;
-            /* Başlangıç konumu */
             top: 50%;
             left: 70%; 
             transform: translate(-50%, -50%);
-            transition: top 0.1s, left 0.1s; /* Çok hızlı hareket */
+            transition: top 0.1s, left 0.1s;
+            z-index: 1;
+        }
+
+        /* Ekranı Kaplama Animasyonu İçin Yeni Stil */
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #4CAF50; /* Yeşil renk */
+            opacity: 0; /* Başlangıçta görünmez */
+            z-index: 100; /* En üstte olmalı */
+            pointer-events: none; /* Üzerine tıklamayı engeller */
+            transition: opacity 0.8s ease-out; /* Yumuşak geçiş */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 0 0 15px rgba(0,0,0,0.5);
+            visibility: hidden; /* Tamamen gizli tutar */
+        }
+
+        #overlay.active {
+            opacity: 1; /* Görünür hale gelir */
+            visibility: visible;
         }
 
         @keyframes dropIn {
@@ -87,34 +115,39 @@
         <button id="no-btn" class="button">Hayır</button>
     </div>
 
+    <div id="overlay">
+        OYNAYALIM! 🦆
+    </div>
+
     <script>
         const noButton = document.getElementById('no-btn');
         const container = document.getElementById('container');
+        const overlay = document.getElementById('overlay'); // Overlay elementini al
 
-        // Hareket fonksiyonu
         function moveNoButton() {
-            // Konteynerin ve butonun boyutlarını al
             const containerWidth = container.offsetWidth;
             const containerHeight = container.offsetHeight;
             const btnWidth = noButton.offsetWidth;
             const btnHeight = noButton.offsetHeight;
 
-            // Rastgele yeni pozisyon hesapla (padding payı bırakarak)
-            // Butonun dışarı taşmaması için matematiksel sınırlandırma
             const newX = Math.random() * (containerWidth - btnWidth);
             const newY = Math.random() * (containerHeight - btnHeight);
 
             noButton.style.left = newX + 'px';
             noButton.style.top = newY + 'px';
-            noButton.style.transform = 'none'; // Ortalamayı iptal et
+            noButton.style.transform = 'none';
         }
 
-        // Mouse üzerine gelince kaç
         noButton.addEventListener('mouseover', moveNoButton);
 
         function handleAnswer(answer) {
             if (answer === 'Evet') {
-                alert("Harika! Hemen oyuna giriyorum! 🦆🔪");
+                overlay.classList.add('active'); // Overlay'i aktif et
+                setTimeout(() => {
+                    // İstersen burada başka bir sayfaya yönlendirebilirsin
+                    // window.location.href = "https://discord.com/";
+                    alert("Harika! Hemen oyuna giriyorum! 🦆🔪");
+                }, 1000); // Animasyonun bitmesini bekle (1 saniye)
             }
         }
     </script>
