@@ -2,8 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Özel Davet Yükleniyor...</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <title>Davet Yükleniyor...</title>
     <style>
         body {
             display: flex;
@@ -11,30 +10,25 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #1a1a2e, #16213e); /* Modern gradient */
-            color: #e0e0e0; /* Açık gri tonu */
-            font-family: 'Poppins', sans-serif; /* Modern yazı tipi */
-            font-size: 1.6em;
-            overflow: hidden; /* Taşmaları engeller */
-        }
-        p {
-            animation: pulse 1.5s infinite alternate; /* Yüklenirken titreşim efekti */
-        }
-        @keyframes pulse {
-            from { transform: scale(0.95); opacity: 0.8; }
-            to { transform: scale(1.05); opacity: 1; }
+            background-color: #36393f;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 1.5em;
         }
     </style>
 </head>
 <body>
-    <p>Özel Davetiniz Yükleniyor...</p>
+    <p>Lütfen bekleyin, özel davetiniz yükleniyor...</p>
 
     <script>
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        // Cihazı Tespit Etme ve Yönlendirme Mekanizması
+        const isMobile = /Android|webOS|iPhone|iPad|IEMobile|Opera Mini/i.test(navigator.userAgent) && !/iPad/i.test(navigator.userAgent);
         
         if (isMobile) {
+            // Mobil cihaz tespit edildiyse, telefon sayfasına yönlendir.
             window.location.href = "telefon.html";
         } else {
+            // Bilgisayar (masaüstü/laptop) tespit edildiyse, bilgisayar sayfasına yönlendir.
             window.location.href = "bilgisayar.html";
         }
     </script>

@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Goose Goose Duck Daveti - Mobil</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <title>Özel Davet - Mobil</title>
     <style>
+        /* CSS: Görünüm ve Düzen */
         body {
             display: flex;
             flex-direction: column;
@@ -13,67 +13,77 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #1a1a2e, #16213e); /* Modern gradient */
-            color: #e0e0e0;
-            font-family: 'Poppins', sans-serif;
+            background-color: #36393f;
+            color: white;
+            font-family: Arial, sans-serif;
             text-align: center;
-            overflow: hidden;
         }
 
         h1 {
-            font-size: 2.5em; /* Mobil için biraz daha küçük */
+            font-size: 2.2em;
             margin-bottom: 50px;
-            color: #90ee90;
-            text-shadow: 0 0 10px rgba(144, 238, 144, 0.6);
-            animation: fadeIn 1s ease-out;
         }
 
         .buttons-container {
             display: flex;
-            gap: 20px;
+            gap: 20px; 
             justify-content: center;
             align-items: center;
             width: 100%;
             touch-action: manipulation;
-            flex-wrap: wrap; /* Butonların mobil görünümde alt alta geçmesine izin verir */
         }
 
         .button {
-            padding: 22px 45px; /* Mobil için büyük dokunma alanı */
-            font-size: 1.5em;
             cursor: pointer;
             border: none;
-            border-radius: 15px; /* Daha yumuşak köşeler */
-            font-weight: 700;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-            transition: all 0.3s ease;
+            border-radius: 10px;
+            transition: all 0.5s ease-in-out; /* Boyut animasyonu için gerekli */
         }
 
         #yes-btn {
-            background-color: #4CAF50;
+            background-color: #4CAF50; 
             color: white;
-            animation: growAndPulse 3s infinite alternate; /* Sürekli büyüyüp küçülme ve parlama */
+            padding: 25px 50px; /* Başlangıç büyük */
         }
 
         #no-btn {
             background-color: #f44336;
             color: white;
-            padding: 12px 25px; /* HAYIR butonunu kasıtlı olarak küçük yap */
-            font-size: 1.1em;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-            /* Mobil için Hayır butonunu biraz daha izole edebiliriz */
-            margin-top: 30px; 
+            padding: 10px 20px; /* Başlangıç küçük */
+            font-size: 1em;
+        }
+        
+        /* Sayfayı Kaplayan Coşku Katmanı */
+        #yes-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #28a745;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 8em;
+            color: white;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            flex-direction: column;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            transform: scale(0.8);
         }
 
-        /* Animasyonlar */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        #yes-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1); 
         }
-        @keyframes growAndPulse {
-            0% { transform: scale(1); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
-            50% { transform: scale(1.15); box-shadow: 0 0 30px rgba(76, 175, 80, 0.8); } /* Büyürken parlama */
-            100% { transform: scale(1); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
+
+        #yes-overlay p {
+            font-size: 0.3em;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -86,56 +96,93 @@
         <button id="no-btn" class="button" onclick="handleAnswer('Hayır')">Hayır</button>
     </div>
 
-    <script>
-        const yesButton = document.getElementById('yes-btn');
-        const container = document.getElementById('container');
-        const noButton = document.getElementById('no-btn'); // Hayır butonunu da alalım
+    <div id="yes-overlay">
+        <span>EVET!</span>
+        <p>Hemen Duck'ları avlamaya gidiyoruz! 🦆</p>
+    </div>
 
+    <script>
+        // JavaScript: Boyut Değişimi Animasyonu ve Dokunmatik Hilesi
+        const yesButton = document.getElementById('yes-btn');
+        const noButton = document.getElementById('no-btn');
+        const container = document.getElementById('container');
+        
+        let yesSize = 25; 
+        let noSize = 10;  
+
+        // Boyut animasyonunu başlatan Interval
+        const sizeInterval = setInterval(function() {
+            
+            // EVET BÜYÜYECEK (25'ten 40'a)
+            if (yesSize < 40) {
+                yesSize += 1;
+            } else {
+                yesSize = 25;
+            }
+            
+            // HAYIR KÜÇÜLECEK (10'dan 3'e)
+            if (noSize > 3) {
+                noSize -= 1;
+            } else {
+                noSize = 10;
+            }
+
+            // Buton boyutlarını ayarla
+            yesButton.style.padding = `${yesSize}px ${yesSize * 2}px`;
+            noButton.style.padding = `${noSize}px ${noSize * 2}px`;
+            
+            // Font boyutlarını ayarla
+            yesButton.style.fontSize = `${1.2 + (yesSize - 25) * 0.05}em`;
+            noButton.style.fontSize = `${1.2 - (10 - noSize) * 0.05}em`;
+
+        }, 500); // Yarım saniyede bir çalışır
+
+        // Dokunmatik alan hilesi
         container.addEventListener('touchstart', function(event) {
             if (event.touches.length === 1) {
+                
                 const touchX = event.touches[0].clientX;
                 const touchY = event.touches[0].clientY;
                 const yesRect = yesButton.getBoundingClientRect();
-                const noRect = noButton.getBoundingClientRect(); // Hayır butonunun da konumunu alalım
                 
-                // HAYALİ GENİŞLETİLMİŞ EVET ALANI: EVET butonunun etrafındaki geniş bir tampon bölge
+                // HAYALİ GENİŞLETİLMİŞ EVET ALANI (80 piksel ötesi)
                 const extendedArea = {
-                    left: yesRect.left - 100, // Daha geniş bir alan
-                    right: yesRect.right + 100,
-                    top: yesRect.top - 100,
-                    bottom: yesRect.bottom + 100
+                    left: yesRect.left - 80,
+                    right: yesRect.right + 80,
+                    top: yesRect.top - 80,
+                    bottom: yesRect.bottom + 80
                 };
                 
-                // Kullanıcının dokunduğu yer, bu genişletilmiş EVET alanının içindeyse
+                // Dokunulan yer, genişletilmiş EVET alanındaysa, EVET cevabını tetikle
                 if (
                     touchX >= extendedArea.left &&
                     touchX <= extendedArea.right &&
                     touchY >= extendedArea.top &&
                     touchY <= extendedArea.bottom
                 ) {
-                    // Orijinal tıklamayı iptal et ve EVET cevabını tetikle
                     event.preventDefault(); 
                     handleAnswer('Evet');
-                } 
-                // Eğer dokunulan nokta GENİŞLETİLMİŞ EVET alanında değilse VE tam olarak HAYIR butonunun içindeyse
-                else if (
-                    touchX >= noRect.left &&
-                    touchX <= noRect.right &&
-                    touchY >= noRect.top &&
-                    touchY <= noRect.bottom
-                ) {
-                    // Sadece bu durumda HAYIR cevabını tetikle (Bu çok zor olacak!)
-                     event.preventDefault(); 
-                     handleAnswer('Hayır');
                 }
             }
         });
         
         function handleAnswer(answer) {
             if (answer === 'Evet') {
-                alert("Evet! Harika bir karar. Hemen Duck'ları avlamaya gidiyoruz! 🦆");
+                // **ÖNEMLİ:** Boyut animasyonunu durdur
+                clearInterval(sizeInterval); 
+                
+                const overlay = document.getElementById('yes-overlay');
+                
+                // Üst katmanı etkinleştir (Sayfayı anında kaplar)
+                overlay.classList.add('active');
+
+                // Butonları ve soruyu gizle
+                document.getElementById('yes-btn').style.display = 'none';
+                document.getElementById('no-btn').style.display = 'none';
+                document.querySelector('h1').style.display = 'none';
+
             } else {
-                 alert("Üzgünüm, telefonda dokunma hassasiyeti çok düşük. Lütfen 'Evet'e doğru biraz daha merkeze dokunmayı dener misin? 😉");
+                 alert("Üzgünüm, telefonda dokunma hassasiyeti çok düşük. Lütfen biraz daha merkeze doğru ('Evet'e) dokunmayı deneyiniz. 😉");
             }
         }
     </script>

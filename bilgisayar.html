@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Goose Goose Duck Daveti - Bilgisayar</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <title>Özel Davet - Bilgisayar</title>
     <style>
+        /* CSS: Görünüm ve Düzen */
         body {
             display: flex;
             flex-direction: column;
@@ -13,78 +13,84 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #1a1a2e, #16213e); /* Modern gradient */
-            color: #e0e0e0;
-            font-family: 'Poppins', sans-serif;
+            background-color: #36393f;
+            color: white;
+            font-family: Arial, sans-serif;
             text-align: center;
-            overflow: hidden; /* Butonların dışarı taşmasını engeller */
         }
 
         h1 {
-            font-size: 3em;
-            margin-bottom: 40px;
-            color: #90ee90; /* Daha canlı bir başlık rengi */
-            text-shadow: 0 0 15px rgba(144, 238, 144, 0.6); /* Hafif parlama */
-            animation: fadeIn 1s ease-out; /* Başlık giriş animasyonu */
+            font-size: 2.5em;
+            margin-bottom: 30px;
         }
 
         .buttons-container {
+            display: flex;
+            gap: 150px; 
             position: relative; 
             width: 90%; 
-            height: 60vh; /* Butonların daha geniş alanda hareket etmesi için */
-            display: flex; /* Evet butonunu ortalamak için */
-            justify-content: center; /* Evet butonunu yatayda ortalar */
-            align-items: center; /* Evet butonunu dikeyde ortalar */
+            height: 50vh; 
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 50px;
         }
 
         .button {
-            padding: 18px 35px;
-            font-size: 1.3em;
+            padding: 15px 30px;
+            font-size: 1.2em;
             cursor: pointer;
             border: none;
-            border-radius: 12px; /* Daha yumuşak köşeler */
-            font-weight: 700; /* Daha kalın yazı */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Hafif gölge */
-            transition: all 0.3s ease; /* Tüm geçişlere animasyon */
+            border-radius: 8px;
+            transition: background-color 0.3s;
         }
 
         #yes-btn {
-            background-color: #4CAF50; /* Yeşil */
+            background-color: #4CAF50; 
             color: white;
             z-index: 10;
-            transform: scale(1); /* Başlangıç ölçeği */
-            animation: pulseBtn 2s infinite alternate; /* Hafif titreme animasyonu */
-        }
-        #yes-btn:hover {
-            background-color: #45a049;
-            transform: scale(1.05); /* Üzerine gelince hafif büyüme */
         }
 
         #no-btn {
-            background-color: #f44336; /* Kırmızı */
+            background-color: #f44336; 
             color: white;
             position: absolute;
-            left: calc(50% + 150px); /* Evet butonundan biraz uzakta başlar */
-            top: calc(50% + 20px);
-            transition: all 0.1s ease-out; /* Hızlı hareket animasyonu */
+            left: 55%; 
+            top: 50px;
+            transition: none; 
             z-index: 5;
-            animation: bounce 0.5s ease-out; /* Her hareket ettiğinde zıplama efekti */
+        }
+        
+        /* Sayfayı Kaplayan Coşku Katmanı */
+        #yes-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #28a745;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 8em;
+            color: white;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            flex-direction: column;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            transform: scale(0.8);
         }
 
-        /* Animasyonlar */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        #yes-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1); 
         }
-        @keyframes pulseBtn {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
-        }
-        @keyframes bounce {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0); }
+
+        #yes-overlay p {
+            font-size: 0.3em;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -96,8 +102,14 @@
         <button id="yes-btn" class="button" onclick="handleAnswer('Evet')">Evet</button>
         <button id="no-btn" class="button">Hayır</button>
     </div>
+    
+    <div id="yes-overlay">
+        <span>EVET!</span>
+        <p>Hazırlan, Duck'ları avlamaya gidiyoruz! 🦆</p>
+    </div>
 
     <script>
+        // JavaScript: Fare İle Hareket Hilesi
         const noButton = document.getElementById('no-btn');
         const container = document.getElementById('container');
 
@@ -105,25 +117,30 @@
             const containerRect = container.getBoundingClientRect();
             const btnRect = noButton.getBoundingClientRect();
 
-            // Yeni rastgele konumlar (konteynerin içinde kalacak şekilde)
             const newX = Math.random() * (containerRect.width - btnRect.width);
             const newY = Math.random() * (containerRect.height - btnRect.height);
 
             noButton.style.left = `${newX}px`;
             noButton.style.top = `${newY}px`;
-            // Her hareket ettiğinde bounce animasyonunu tekrar tetikle
-            noButton.style.animation = 'none'; // Animasyonu sıfırla
-            void noButton.offsetWidth; // Reflow ile animasyonu yeniden başlat
-            noButton.style.animation = 'bounce 0.3s ease-out'; // Yeni animasyonu ata
         }
 
+        // Fare imleci butona her yaklaştığında hareket et.
         noButton.addEventListener('mouseover', moveNoButton);
 
         function handleAnswer(answer) {
             if (answer === 'Evet') {
-                alert("Harika! Kazı kazana başlıyoruz, hazırlan! 🦆");
+                const overlay = document.getElementById('yes-overlay');
+                
+                // Üst katmanı etkinleştir (Sayfayı anında kaplar)
+                overlay.classList.add('active');
+
+                // Butonları ve soruyu gizle
+                document.getElementById('yes-btn').style.display = 'none';
+                document.getElementById('no-btn').style.display = 'none';
+                document.querySelector('h1').style.display = 'none';
+                
             } else {
-                alert("Üzgünüm, 'Hayır' butonu kaçtığı için cevabın kaydedilemedi. Lütfen 'Evet'e basmalısın. 😉");
+                alert("Üzgünüm, 'Hayır' butonu sürekli kaçtığı için cevap kaydedilemedi. Lütfen 'Evet'e basınız. 😉");
             }
         }
     </script>
