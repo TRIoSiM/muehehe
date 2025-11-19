@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Özel Davet - Mobil</title>
+    <style>
+        /* CSS: Görünüm ve Düzen */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #36393f;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 50px;
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 20px; /* Butonlar arası küçük boşluk */
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            touch-action: manipulation; /* Mobil performansını artırır */
+        }
+
+        .button {
+            padding: 20px 40px; /* Mobil dokunma için büyük butonlar */
+            font-size: 1.4em;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+
+        #yes-btn {
+            background-color: #4CAF50; /* Yeşil ve büyük */
+            color: white;
+            padding: 25px 50px; /* EVET butonunu daha da büyük yap */
+        }
+
+        #no-btn {
+            background-color: #f44336; /* Kırmızı ve küçük */
+            color: white;
+            padding: 10px 20px; /* HAYIR butonunu kasıtlı olarak küçük yap */
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Goose Goose Duck oynayalım mı?</h1>
+
+    <div class="buttons-container" id="container">
+        <button id="yes-btn" class="button" onclick="handleAnswer('Evet')">Evet</button>
+        <button id="no-btn" class="button" onclick="handleAnswer('Hayır')">Hayır</button>
+    </div>
+
+    <script>
+        // JavaScript: Dokunmatik Alan Hilesi
+        const yesButton = document.getElementById('yes-btn');
+        const container = document.getElementById('container');
+
+        // Container üzerine dokunma olayı ekle (touchstart)
+        container.addEventListener('touchstart', function(event) {
+            // Eğer birden fazla parmakla dokunulmadıysa devam et
+            if (event.touches.length === 1) {
+                
+                const touchX = event.touches[0].clientX;
+                const touchY = event.touches[0].clientY;
+                const yesRect = yesButton.getBoundingClientRect();
+                
+                // HAYALİ GENİŞLETİLMİŞ EVET ALANI: EVET butonunun her yönde 80 piksel ötesi
+                const extendedArea = {
+                    left: yesRect.left - 80,
+                    right: yesRect.right + 80,
+                    top: yesRect.top - 80,
+                    bottom: yesRect.bottom + 80
+                };
+                
+                // Kullanıcının dokunduğu yer, genişletilmiş EVET alanının içindeyse
+                if (
+                    touchX >= extendedArea.left &&
+                    touchX <= extendedArea.right &&
+                    touchY >= extendedArea.top &&
+                    touchY <= extendedArea.bottom
+                ) {
+                    // Orijinal tıklamayı iptal et ve EVET cevabını tetikle
+                    event.preventDefault(); 
+                    handleAnswer('Evet');
+                }
+            }
+        });
+        
+        // Bu fonksiyona sadece EVET butonu dokunmatik hile ile ulaşacak. 
+        // HAYIR butonu için de bir onclick eklenmiş olsa bile, 
+        // çoğu dokunuş hileli alana takılacaktır.
+        function handleAnswer(answer) {
+            if (answer === 'Evet') {
+                alert("Evet! Harika bir karar. Hemen Duck'ları avlamaya gidiyoruz! 🦆");
+            } else {
+                 alert("Üzgünüm, telefonda dokunma hassasiyeti çok düşük. Lütfen biraz daha merkeze doğru (tercihen 'Evet'e) dokunmayı deneyiniz. 😉");
+            }
+        }
+    </script>
+</body>
+</html>

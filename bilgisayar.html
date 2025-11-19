@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Özel Davet - Bilgisayar</title>
+    <style>
+        /* CSS: Görünüm ve Düzen */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #36393f;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 150px; /* Butonlar arası başlangıç boşluğu */
+            position: relative; 
+            width: 90%; 
+            height: 50vh; /* Butonun yukarı-aşağı hareket etmesi için yeterli yükseklik */
+            justify-content: center;
+            align-items: flex-start; /* Butonları yukarıda tutar */
+            padding-top: 50px;
+        }
+
+        .button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        #yes-btn {
+            background-color: #4CAF50; /* Yeşil */
+            color: white;
+            z-index: 10; /* Üstte kalmasını sağlar */
+        }
+
+        #no-btn {
+            background-color: #f44336; /* Kırmızı */
+            color: white;
+            position: absolute;
+            /* Başlangıç konumu ayarlaması */
+            left: 55%; 
+            top: 50px;
+            transition: none; /* Hareketin anlık olması için geçişi kapatır */
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Goose Goose Duck oynayalım mı?</h1>
+
+    <div class="buttons-container" id="container">
+        <button id="yes-btn" class="button" onclick="handleAnswer('Evet')">Evet</button>
+        <button id="no-btn" class="button">Hayır</button>
+    </div>
+
+    <script>
+        // JavaScript: Fare İle Hareket Hilesi
+        const noButton = document.getElementById('no-btn');
+        const container = document.getElementById('container');
+
+        function moveNoButton() {
+            const containerRect = container.getBoundingClientRect();
+            const btnRect = noButton.getBoundingClientRect();
+
+            // Yeni rastgele X konumu (Konteynerin genişliği içinde kalacak)
+            const newX = Math.random() * (containerRect.width - btnRect.width);
+            
+            // Yeni rastgele Y konumu (Konteynerin yüksekliği içinde kalacak)
+            const newY = Math.random() * (containerRect.height - btnRect.height);
+
+            noButton.style.left = `${newX}px`;
+            noButton.style.top = `${newY}px`;
+        }
+
+        // Fare imleci butona her yaklaştığında hareket et.
+        noButton.addEventListener('mouseover', moveNoButton);
+
+        function handleAnswer(answer) {
+            if (answer === 'Evet') {
+                alert("Harika! Hazırlan, kazı kazanmaya başlıyoruz! 🦆");
+            } else {
+                alert("Üzgünüm, 'Hayır' butonu sürekli kaçtığı için cevap kaydedilemedi. Lütfen 'Evet'e basınız. 😉");
+            }
+        }
+    </script>
+
+</body>
+</html>
